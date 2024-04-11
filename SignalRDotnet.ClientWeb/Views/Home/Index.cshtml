@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "SignalR Chat";
+}
+
+<h2>SignalR Chat</h2>
+
+<!-- Bağlantı Durumu -->
+<div id="connection-status" class="alert alert-info" role="alert">
+    Bağlantı durumu: Bağlanmadı
+</div>
+
+<!-- Tüm İstemcilere Mesaj Gönder -->
+<div class="mb-3">
+    <label for="messageAll" class="form-label">Tüm İstemcilere Mesaj Gönder</label>
+    <input type="text" class="form-control" id="messageAll" placeholder="Mesajınızı yazın">
+    <button class="btn btn-primary mt-2" onclick="sendMessageToAll()">Gönder</button>
+</div>
+
+<!-- Sadece İstek Yapan İstemciye Mesaj Gönder -->
+<div class="mb-3">
+    <label for="messageCaller" class="form-label">Sadece Sana Mesaj Gönder</label>
+    <input type="text" class="form-control" id="messageCaller" placeholder="Mesajınızı yazın">
+    <button class="btn btn-secondary mt-2" onclick="sendMessageToCaller()">Gönder</button>
+</div>
+
+<!-- Diğer İstemcilere Mesaj Gönder -->
+<div class="mb-3">
+    <label for="messageOthers" class="form-label">Diğer İstemcilere Mesaj Gönder</label>
+    <input type="text" class="form-control" id="messageOthers" placeholder="Mesajınızı yazın">
+    <button class="btn btn-success mt-2" onclick="sendMessageToOthers()">Gönder</button>
+</div>
+
+<!-- Belirli Bir Gruba Mesaj Gönder -->
+<div class="mb-3">
+    <label for="groupName" class="form-label">Grup Adı</label>
+    <input type="text" class="form-control" id="groupName" placeholder="Grup adını yazın">
+    <label for="messageGroup" class="form-label">Gruba Mesaj Gönder</label>
+    <input type="text" class="form-control" id="messageGroup" placeholder="Mesajınızı yazın">
+    <button class="btn btn-danger mt-2" onclick="sendMessageToGroup()">Gönder</button>
+</div>
+
+<!-- Belirli Bir İstemciye Mesaj Gönder -->
+<div class="mb-3">
+    <label for="connectionId" class="form-label">İstemci Bağlantı Kimliği</label>
+    <input type="text" class="form-control" id="connectionId" placeholder="Bağlantı kimliğini yazın">
+    <label for="messageClient" class="form-label">İstemciye Mesaj Gönder</label>
+    <input type="text" class="form-control" id="messageClient" placeholder="Mesajınızı yazın">
+    <button class="btn btn-warning mt-2" onclick="sendMessageToClient()">Gönder</button>
+</div>
+
+<!-- Gruba Ekleme ve Çıkarma -->
+<div class="mb-3">
+    <label for="groupManage" class="form-label">Grup Yönetimi</label>
+    <input type="text" class="form-control" id="groupManage" placeholder="Grup adını yazın">
+    <button class="btn btn-info mt-2" onclick="addToGroup()">Gruba Ekle</button>
+    <button class="btn btn-dark mt-2" onclick="removeFromGroup()">Gruptan Çıkar</button>
+</div>
+
+@section Scripts {
+    <!-- SignalR JavaScript kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+
+    <script>
+        // SignalR bağlantısını kur
+        var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7000/messageHub").build();
+
+        // Bağlantı durumunu güncelle
+        connection.on("ReceiveMessage", function (message) {
+            var msg = message.toLowerCase();
+            console.log("Message: ", message)
+            document.getElementById("connection-status").textContent = msg;
+        });
+
+        // Bağlantıyı başlat
+        connection.start().then(function () {
+            console.log("Message: ", message)
+            document.getElementById("connection-status").textContent = "Bağlantı durumu: Bağlandı";
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        // Metodları tetikleme fonksiyonları
+        function sendMessageToAll() {
+            var message = document.getElementById("messageAll").value;
+            console.log("Message: ", message)
+            connection.invoke("SendMessageToAll", message).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function sendMessageToCaller() {
+            var message = document.getElementById("messageCaller").value;
+            console.log("Message: ", message)
+            connection.invoke("SendMessageToCaller", message).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function sendMessageToOthers() {
+            var message = document.getElementById("messageOthers").value;
+            console.log("Message: ", message)
+            connection.invoke("SendMessageToOther", message).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function sendMessageToGroup() {
+            var groupName = document.getElementById("groupName").value;
+            var message = document.getElementById("messageGroup").value;
+            console.log("Message: ", message)
+            connection.invoke("SendMessageToGroup", groupName, message).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function sendMessageToClient() {
+            var connectionId = document.getElementById("connectionId").value;
+            var message = document.getElementById("messageClient").value;
+            console.log("Message: ", message)
+            connection.invoke("SendMessageToClient", connectionId, message).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function addToGroup() {
+            var groupName = document.getElementById("groupManage").value;
+            console.log("Message: ", message)
+            connection.invoke("AddToGroup", groupName).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function removeFromGroup() {
+            var groupName = document.getElementById("groupManage").value;
+            console.log("Message: ", message)
+            connection.invoke("RemoveFromGroup", groupName).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+    </script>
+}
