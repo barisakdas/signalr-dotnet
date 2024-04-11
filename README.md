@@ -14,9 +14,9 @@ Gerçek zamanlı veri akışının önemi günümüzde giderek artmaktadır. Bu 
 
 ## Projede Verilen Örnekler
 
-- **Sunucu:** .NET 8 API ile oluşturulan sunucu, SignalR Hub'ını barındırır ve istemciler arası iletişimi koordine eder.
-- **Worker Service:** Arka plan işlemleri ve sunucu tarafı mantığı için kullanılır.
-- **MVC Web İstemcileri:** Kullanıcıların mesajlaşmasını ve sunucu ile etkileşimde bulunmasını sağlayan iki ayrı web istemcisi.
+- **.NET 8 API Sunucusu:** Bu sunucu, SignalR Hub'ını barındırır ve istemciler arasındaki iletişimi yönetir. Gerçek zamanlı veri akışını ve etkileşimli kullanıcı deneyimlerini mümkün kılar.
+- **Worker Service:** Uygulamanın arka plan işlemlerini yürütür. Bu servis, uzun süreli işlemleri ve zaman alıcı görevleri etkin bir şekilde yönetir.
+- **MVC Web İstemcileri:** Kullanıcıların web üzerinden sunucuyla etkileşime girebildiği iki ayrı istemci uygulamasıdır. Bu istemciler, kullanıcıların mesajlaşmasını ve sunucu tarafındaki veri akışlarını takip etmesini sağlar.
 
 ### Sunucu Örneği
 
